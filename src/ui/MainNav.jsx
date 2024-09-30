@@ -56,31 +56,31 @@ function MainNav() {
     <nav>
       <NavList>
         <li>
-          <StyledNavLink href='/dashboard'>
+          <StyledNavLink to='/dashboard'>
             <HiOutlineHome />
             <span>Home</span>
           </StyledNavLink>
         </li>
         <li>
-          <StyledNavLink href='/bookings'>
+          <StyledNavLink to='/bookings'>
             <HiOutlineCalendarDays />
             <span>Bookings</span>
           </StyledNavLink>
         </li>
         <li>
-          <StyledNavLink href='/cabins'>
+          <StyledNavLink to='/cabins'>
             <HiOutlineHomeModern />
             <span>Cabins</span>
           </StyledNavLink>
         </li>
         <li>
-          <StyledNavLink href='/users'>
+          <StyledNavLink to='/users'>
             <HiOutlineUsers />
             <span>Users</span>
           </StyledNavLink>
         </li>
         <li>
-          <StyledNavLink href='/settings'>
+          <StyledNavLink to='/settings'>
             <HiOutlineCog6Tooth />
             <span>Settings</span>
           </StyledNavLink>
