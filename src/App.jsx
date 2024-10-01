@@ -1,4 +1,4 @@
-import { Navigate, Router, RouterProvider } from 'react-router';
+import { Navigate, RouterProvider } from 'react-router';
 import { createBrowserRouter } from 'react-router-dom';
 import GlobalStyles from './styles/GlobalStyles';
 import Dashboard from './pages/Dashboard';
@@ -10,6 +10,16 @@ import Settings from './pages/Settings';
 import Users from './pages/Users';
 import PageNotFound from './pages/PageNotFound';
 import AppLayout from './ui/AppLayout';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60 * 1000,
+    },
+  },
+});
 
 const router = createBrowserRouter([
   {
@@ -63,10 +73,14 @@ const router = createBrowserRouter([
 ]);
 function App() {
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools
+        initialIsOpen={false}
+        buttonPosition='bottom-left'
+      />
       <GlobalStyles />
       <RouterProvider router={router} />
-    </>
+    </QueryClientProvider>
   );
 }
 
