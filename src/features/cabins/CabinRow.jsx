@@ -1,10 +1,12 @@
 import styled from 'styled-components';
 import { formatCurrency } from '../../utils/helpers';
-import { useState } from 'react';
+import { useContext } from 'react';
 import CreateCabinForm from './CreateCabinForm';
 import { useDeleteCabin } from './useDeleteCabin';
 import { HiPencil, HiSquare2Stack, HiTrash } from 'react-icons/hi2';
 import { useCreateCabin } from './useCreateCabin';
+import Modal from '../../ui/Modal';
+import { CabinsContext } from '../../pages/Cabins';
 
 const TableRow = styled.div`
   display: grid;
@@ -46,7 +48,7 @@ const Discount = styled.div`
 `;
 
 function CabinRow({ cabin }) {
-  const [showForm, setShowForm] = useState(false);
+  const { isOpenModal, setIsOpenModal } = useContext(CabinsContext);
   const { createCabin, isCreating } = useCreateCabin();
   const {
     id: cabinId,
@@ -88,7 +90,7 @@ function CabinRow({ cabin }) {
           >
             <HiSquare2Stack />
           </button>
-          <button onClick={() => setShowForm((show) => !show)}>
+          <button onClick={() => setIsOpenModal((show) => !show)}>
             <HiPencil />
           </button>
           <button
@@ -99,7 +101,11 @@ function CabinRow({ cabin }) {
           </button>
         </div>
       </TableRow>
-      {showForm && <CreateCabinForm cabinToEdit={cabin} />}
+      {isOpenModal && (
+        <Modal>
+          <CreateCabinForm cabinToEdit={cabin} />
+        </Modal>
+      )}
     </>
   );
 }

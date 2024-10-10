@@ -1,4 +1,8 @@
-import styled from "styled-components";
+import styled from 'styled-components';
+import { HiXMark } from 'react-icons/hi2';
+import { createPortal } from 'react-dom';
+import { useContext } from 'react';
+import { CabinsContext } from '../pages/Cabins';
 
 const StyledModal = styled.div`
   position: fixed;
@@ -48,3 +52,24 @@ const Button = styled.button`
     color: var(--color-grey-500);
   }
 `;
+
+export default function Modal({ children, onClose }) {
+  const { setIsOpenModal, setIsOpenTable, isOpenModal, isOpenTable } =
+    useContext(CabinsContext);
+  return createPortal(
+    <Overlay
+      onClick={() => {
+        isOpenModal && setIsOpenModal(false);
+        isOpenTable && setIsOpenTable(false);
+      }}
+    >
+      <StyledModal>
+        <Button onClick={onClose}>
+          <HiXMark />
+        </Button>
+        {children}
+      </StyledModal>
+    </Overlay>,
+    document.body
+  );
+}
