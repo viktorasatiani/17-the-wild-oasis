@@ -1,8 +1,7 @@
-import { useContext } from 'react';
+import { useState } from 'react';
 import Button from '../../ui/Button';
 import Modal from '../../ui/Modal';
 import CreateCabinForm from './CreateCabinForm';
-import { CabinsContext } from '../../pages/Cabins';
 import CabinTable from './CabinTable';
 import styled from 'styled-components';
 
@@ -13,9 +12,14 @@ const StyledButtonContainer = styled.div`
 `;
 
 function AddCabin() {
-  const { isOpenModal, setIsOpenModal, isOpenTable, setIsOpenTable } =
-    useContext(CabinsContext);
-
+  const [isOpenModal, setIsOpenModal] = useState();
+  const [isOpenTable, setIsOpenTable] = useState();
+  function onCloseModal() {
+    isOpenModal && setIsOpenModal(false);
+  }
+  function onCloseTable() {
+    isOpenTable && setIsOpenTable(false);
+  }
   return (
     <div>
       <StyledButtonContainer>
@@ -26,21 +30,16 @@ function AddCabin() {
           {isOpenTable ? 'Hide Tables' : 'Show Tables'}
         </Button>
       </StyledButtonContainer>
-      {isOpenModal ||
-        (isOpenTable && (
-          <Modal
-            onClose={() => {
-              isOpenModal && setIsOpenModal(false);
-              isOpenTable && setIsOpenTable(false);
-            }}
-          >
-            {isOpenModal ? (
-              <CreateCabinForm onCloseModal={() => setIsOpenModal(false)} />
-            ) : (
-              <CabinTable />
-            )}
-          </Modal>
-        ))}
+      {isOpenModal && (
+        <Modal onCloseModal={onCloseModal}>
+          <CreateCabinForm onCloseModal={() => setIsOpenModal(false)} />
+        </Modal>
+      )}
+      {isOpenTable && (
+        <Modal onCloseTable={onCloseTable}>
+          <CabinTable />
+        </Modal>
+      )}
     </div>
   );
 }

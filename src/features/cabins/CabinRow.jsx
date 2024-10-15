@@ -1,12 +1,11 @@
 import styled from 'styled-components';
 import { formatCurrency } from '../../utils/helpers';
-import { useContext } from 'react';
-import CreateCabinForm from './CreateCabinForm';
 import { useDeleteCabin } from './useDeleteCabin';
 import { HiPencil, HiSquare2Stack, HiTrash } from 'react-icons/hi2';
 import { useCreateCabin } from './useCreateCabin';
 import Modal from '../../ui/Modal';
-import { CabinsContext } from '../../pages/Cabins';
+import EditCabinForm from './EditCabinForm';
+import { useState } from 'react';
 
 const TableRow = styled.div`
   display: grid;
@@ -48,7 +47,7 @@ const Discount = styled.div`
 `;
 
 function CabinRow({ cabin }) {
-  const { isOpenModal, setIsOpenModal } = useContext(CabinsContext);
+  const [isOpenEditModal, setIsOpenEditModal] = useState();
   const { createCabin, isCreating } = useCreateCabin();
   const {
     id: cabinId,
@@ -58,6 +57,9 @@ function CabinRow({ cabin }) {
     discount,
     image,
   } = cabin;
+  function onCloseEditModal() {
+    isOpenEditModal && setIsOpenEditModal(false);
+  }
   function handleDuplicate() {
     createCabin({
       name: `copy of ${name}`,
@@ -90,7 +92,7 @@ function CabinRow({ cabin }) {
           >
             <HiSquare2Stack />
           </button>
-          <button onClick={() => setIsOpenModal((show) => !show)}>
+          <button onClick={() => setIsOpenEditModal((show) => !show)}>
             <HiPencil />
           </button>
           <button
@@ -101,9 +103,12 @@ function CabinRow({ cabin }) {
           </button>
         </div>
       </TableRow>
-      {isOpenModal && (
-        <Modal>
-          <CreateCabinForm cabinToEdit={cabin} />
+      {isOpenEditModal && (
+        <Modal onCloseEditModal={onCloseEditModal}>
+          <EditCabinForm
+            cabinToEdit={cabin}
+            onCloseEditModal={onCloseEditModal}
+          />
         </Modal>
       )}
     </>

@@ -1,27 +1,31 @@
-import Input from '../../ui/Input';
-import Form from '../../ui/Form';
-import Button from '../../ui/Button';
-import FileInput from '../../ui/FileInput';
-import Textarea from '../../ui/Textarea';
-import FormRow from '../../ui/FormRow';
 import { useForm } from 'react-hook-form';
-import { useCreateCabin } from './useCreateCabin';
+import { useEditCabin } from './useEditCabin';
 
-function CreateCabinForm({ onCloseModal }) {
-  const { createCabin, isCreating } = useCreateCabin();
+import Form from '../../ui/Form';
+import FormRow from '../../ui/FormRow';
+import Input from '../../ui/Input';
+import FileInput from '../../ui/FileInput';
+import Button from '../../ui/Button';
+import Textarea from '../../ui/Textarea';
 
-  const { register, handleSubmit, reset, getValues, formState } = useForm();
+function EditCabinForm({ cabinToEdit = {}, onCloseEditModal }) {
+  const { editCabin, isEditing } = useEditCabin();
+  const { id: editId, ...editValues } = cabinToEdit;
+  const isEditSession = Boolean(editId);
+  const { register, handleSubmit, reset, getValues, formState } = useForm({
+    defaultValues: isEditSession ? editValues : {},
+  });
   const { errors } = formState;
 
   function submitForm(data) {
     const image = typeof data.image === 'string' ? data.image : data.image[0];
 
-    createCabin(
-      { ...data, image: image },
+    editCabin(
+      { newCabinData: { ...data, image: image }, id: editId },
       {
         onSuccess: () => {
           reset();
-          onCloseModal?.();
+          onCloseEditModal?.();
         },
       }
     );
@@ -32,14 +36,14 @@ function CreateCabinForm({ onCloseModal }) {
   return (
     <Form
       onSubmit={handleSubmit(submitForm, onError)}
-      type={onCloseModal ? 'modal' : 'regular'}
+      type={onCloseEditModal ? 'modal' : 'regular'}
     >
       <FormRow
         label='Cabin name'
         error={errors?.name?.message}
       >
         <Input
-          disabled={isCreating}
+          disabled={isEditing}
           type='text'
           id='name'
           {...register('name', {
@@ -57,7 +61,7 @@ function CreateCabinForm({ onCloseModal }) {
         error={errors?.maxCapacity?.message}
       >
         <Input
-          disabled={isCreating}
+          disabled={isEditing}
           type='number'
           id='maxCapacity'
           {...register('maxCapacity', {
@@ -75,7 +79,7 @@ function CreateCabinForm({ onCloseModal }) {
         error={errors?.regularPrice?.message}
       >
         <Input
-          disabled={isCreating}
+          disabled={isEditing}
           type='number'
           id='regularPrice'
           {...register('regularPrice', {
@@ -93,7 +97,7 @@ function CreateCabinForm({ onCloseModal }) {
         error={errors?.discount?.message}
       >
         <Input
-          disabled={isCreating}
+          disabled={isEditing}
           type='number'
           id='discount'
           defaultValue={0}
@@ -111,7 +115,7 @@ function CreateCabinForm({ onCloseModal }) {
         error={errors?.description?.message}
       >
         <Textarea
-          disabled={isCreating}
+          disabled={isEditing}
           type='number'
           id='description'
           defaultValue=''
@@ -126,11 +130,11 @@ function CreateCabinForm({ onCloseModal }) {
         error={errors?.image?.message || ''}
       >
         <FileInput
-          disabled={isCreating}
+          disabled={isEditing}
           id='image'
           accept='image/*'
           {...register('image', {
-            required: 'This field required',
+            required: isEditSession ? false : 'This field required',
           })}
         />
       </FormRow>
@@ -138,17 +142,17 @@ function CreateCabinForm({ onCloseModal }) {
       <FormRow>
         {/* type is an HTML attribute! */}
         <Button
-          disabled={isCreating}
+          disabled={isEditing}
           variation='secondary'
           type='reset'
-          onClick={onCloseModal}
+          onClick={onCloseEditModal}
         >
           Cancel
         </Button>
-        <Button disabled={isCreating}>Create cabin</Button>
+        <Button disabled={isEditing}>Edit Cabin</Button>
       </FormRow>
     </Form>
   );
 }
 
-export default CreateCabinForm;
+export default EditCabinForm;
