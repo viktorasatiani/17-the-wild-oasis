@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { formatCurrency } from '../../utils/helpers';
 import { useDeleteCabin } from './useDeleteCabin';
 import { HiPencil, HiSquare2Stack, HiTrash } from 'react-icons/hi2';
+import ConfirmDelete from '../../ui/ConfirmDelete';
 import { useCreateCabin } from './useCreateCabin';
 import Modal from '../../ui/Modal';
 import EditCabinForm from './EditCabinForm';
@@ -48,6 +49,7 @@ const Discount = styled.div`
 
 function CabinRow({ cabin }) {
   const [isOpenEditModal, setIsOpenEditModal] = useState();
+  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState();
   const { createCabin, isCreating } = useCreateCabin();
   const {
     id: cabinId,
@@ -59,6 +61,9 @@ function CabinRow({ cabin }) {
   } = cabin;
   function onCloseEditModal() {
     isOpenEditModal && setIsOpenEditModal(false);
+  }
+  function onCloseDeleteModal() {
+    isOpenDeleteModal && setIsOpenDeleteModal(false);
   }
   function handleDuplicate() {
     createCabin({
@@ -95,10 +100,7 @@ function CabinRow({ cabin }) {
           <button onClick={() => setIsOpenEditModal((show) => !show)}>
             <HiPencil />
           </button>
-          <button
-            onClick={() => deletingCabin(cabinId)}
-            disabled={isPending}
-          >
+          <button onClick={() => setIsOpenDeleteModal((show) => !show)}>
             <HiTrash />
           </button>
         </div>
@@ -108,6 +110,16 @@ function CabinRow({ cabin }) {
           <EditCabinForm
             cabinToEdit={cabin}
             onCloseEditModal={onCloseEditModal}
+          />
+        </Modal>
+      )}
+      {isOpenDeleteModal && (
+        <Modal>
+          <ConfirmDelete
+            resourceName={name}
+            onConfirm={() => deletingCabin(cabinId)}
+            disabled={isPending}
+            onCloseDeleteModal={onCloseDeleteModal}
           />
         </Modal>
       )}
