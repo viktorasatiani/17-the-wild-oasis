@@ -10,7 +10,6 @@ function BookingTable() {
 
   if (status === 'pending') return <Spinner />;
   if (!bookings.length) return <Empty resource='Bookings' />;
-  console.log(bookings);
 
   return (
     <Menus>
