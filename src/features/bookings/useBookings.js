@@ -11,7 +11,6 @@ export function useBookings() {
       : { field: 'status', value: filteredValue };
   const sortByValue = searchParmas.get('sortBy') || 'startDate-desc';
   const [field, direction] = sortByValue.split('-');
-  console.log(field, direction);
   const sortBy = !sortByValue ? null : { field, direction };
 
   const { data: bookings, status } = useQuery({

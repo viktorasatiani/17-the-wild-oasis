@@ -1,4 +1,7 @@
-import styled from "styled-components";
+import { HiChevronDoubleLeft, HiChevronDoubleRight } from 'react-icons/hi2';
+
+import { useSearchParams } from 'react-router-dom';
+import styled from 'styled-components';
 
 const StyledPagination = styled.div`
   width: 100%;
@@ -23,8 +26,8 @@ const Buttons = styled.div`
 
 const PaginationButton = styled.button`
   background-color: ${(props) =>
-    props.active ? " var(--color-brand-600)" : "var(--color-grey-50)"};
-  color: ${(props) => (props.active ? " var(--color-brand-50)" : "inherit")};
+    props.active ? ' var(--color-brand-600)' : 'var(--color-grey-50)'};
+  color: ${(props) => (props.active ? ' var(--color-brand-50)' : 'inherit')};
   border: none;
   border-radius: var(--border-radius-sm);
   font-weight: 500;
@@ -55,3 +58,53 @@ const PaginationButton = styled.button`
     color: var(--color-brand-50);
   }
 `;
+
+const PAGE_SIZE = 10;
+
+function Pagination({ count }) {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentPage = !searchParams.get('page')
+    ? 1
+    : Number(searchParams.get('page'));
+  const totalPages = Math.ceil(count / PAGE_SIZE);
+  console.log(currentPage, totalPages);
+
+  function hanldeNext() {
+    const next = currentPage === totalPages ? currentPage : currentPage + 1;
+    searchParams.set('page', next);
+    setSearchParams(searchParams);
+  }
+  function handlePrevious() {
+    const previous = currentPage === 1 ? currentPage : currentPage - 1;
+    searchParams.set('page', previous);
+    setSearchParams(searchParams);
+  }
+  if (totalPages <= 1) return null;
+  return (
+    <StyledPagination>
+      <P>
+        Showing <span>{(currentPage - 1) * PAGE_SIZE + 1}</span> to
+        <span>
+          {currentPage === totalPages ? count : currentPage * PAGE_SIZE}{' '}
+        </span>{' '}
+        of <span>{count}</span> Results
+      </P>
+      <Buttons>
+        <PaginationButton
+          onClick={handlePrevious}
+          disabled={currentPage === 1}
+        >
+          <HiChevronDoubleLeft /> Previous
+        </PaginationButton>
+        <PaginationButton
+          onClick={hanldeNext}
+          disabled={currentPage === totalPages}
+        >
+          Next <HiChevronDoubleRight />
+        </PaginationButton>
+      </Buttons>
+    </StyledPagination>
+  );
+}
+
+export default Pagination;
