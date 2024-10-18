@@ -20,13 +20,16 @@ export async function getBookings({ filter, sortBy, page }) {
 
     query.range(from, to);
   }
-  const { data, error, count } = await query;
+  const quer = await query;
+  // console.log(quer);
+
+  const { data: bookings, error, count } = quer;
 
   if (error) {
     console.error(error);
     throw new Error('Booking not found');
   }
-  return { data, count };
+  return { bookings, count };
 }
 
 export async function getBooking(id) {
