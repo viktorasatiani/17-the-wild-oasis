@@ -20,10 +20,8 @@ export async function getBookings({ filter, sortBy, page }) {
 
     query.range(from, to);
   }
-  const quer = await query;
-  // console.log(quer);
 
-  const { data: bookings, error, count } = quer;
+  const { data: bookings, error, count } = await query;
 
   if (error) {
     console.error(error);
