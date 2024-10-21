@@ -1,5 +1,8 @@
 import { Navigate, RouterProvider } from 'react-router';
 import { createBrowserRouter } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { Toaster } from 'react-hot-toast';
 import GlobalStyles from './styles/GlobalStyles';
 import Dashboard from './pages/Dashboard';
 import Bookings from './pages/Bookings';
@@ -10,11 +13,8 @@ import Settings from './pages/Settings';
 import Users from './pages/Users';
 import PageNotFound from './pages/PageNotFound';
 import AppLayout from './ui/AppLayout';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { Toaster } from 'react-hot-toast';
 import Booking from './pages/Booking';
-
+import CheckIn from './pages/CheckIn';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -51,6 +51,7 @@ const router = createBrowserRouter([
         element: <Bookings />,
       },
       { path: 'bookings/:bookingId', element: <Booking /> },
+      { path: 'checkin/:bookingId', element: <CheckIn /> },
       {
         path: '/cabins',
         element: <Cabins />,
