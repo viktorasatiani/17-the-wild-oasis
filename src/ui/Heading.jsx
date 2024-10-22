@@ -23,6 +23,7 @@ const Heading = styled.h1`
     css`
       font-size: 20px;
       font-weight: 500;
+      text-align: center;
     `}
 `;
 
