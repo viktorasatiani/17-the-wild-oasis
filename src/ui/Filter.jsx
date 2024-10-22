@@ -37,6 +37,7 @@ const FilterButton = styled.button`
 function Filter({ filterField, options }) {
   const [searchParams, setSearchParams] = useSearchParams();
   function handleFilterChange(value) {
+    if (searchParams.get('page')) searchParams.set('page', 1);
     searchParams.set(filterField, value);
     setSearchParams(searchParams);
   }

@@ -10,7 +10,7 @@ function BookingTable() {
   const { bookings, count, status } = useBookings();
 
   if (status === 'pending') return <Spinner />;
-  if (!bookings.length) return <Empty resource='Bookings' />;
+  if (!bookings?.length) return <Empty resource='Bookings' />;
 
   return (
     <Menus>

@@ -5,9 +5,19 @@ import Table from '../../ui/Table';
 import { formatCurrency } from '../../utils/helpers';
 import { formatDistanceFromNow } from '../../utils/helpers';
 import Menus from '../../ui/Menus';
-import { HiArrowDownOnSquare, HiEye } from 'react-icons/hi2';
+import {
+  HiArrowDownOnSquare,
+  HiArrowUpOnSquare,
+  HiEye,
+  HiTrash,
+} from 'react-icons/hi2';
 import { useNavigate } from 'react-router';
-
+import useCheckout from '../check-in-out/useCheckout';
+import useDeleteBooking from './useDeleteBooking';
+import Spinner from '../../ui/Spinner';
+import { useState } from 'react';
+import Modal from '../../ui/Modal';
+import ConfirmDelete from '../../ui/ConfirmDelete';
 const Cabin = styled.div`
   font-size: 1.6rem;
   font-weight: 600;
@@ -49,12 +59,17 @@ function BookingRow({
     cabins: { name: cabinName },
   },
 }) {
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const { checkOut, isCheckingout } = useCheckout();
+  const { deleteBooking, isDeletingBooking } = useDeleteBooking();
   const navigate = useNavigate();
   const statusToTagName = {
     unconfirmed: 'blue',
     'checked-in': 'green',
     'checked-out': 'silver',
   };
+
+  if (isCheckingout || isDeletingBooking) return <Spinner />;
 
   return (
     <Table.Row>
@@ -98,8 +113,32 @@ function BookingRow({
               CheckIn
             </Menus.Button>
           )}
+          {status === 'checked-in' && (
+            <Menus.Button
+              icon={<HiArrowUpOnSquare />}
+              onClick={() => checkOut(bookingId)}
+            >
+              CheckOut
+            </Menus.Button>
+          )}
+          <Menus.Button
+            icon={<HiTrash />}
+            onClick={() => setIsOpenModal((modal) => !modal)}
+          >
+            Delete
+          </Menus.Button>
         </Menus.List>
       </Menus.Menu>
+      {isOpenModal && (
+        <Modal onCloseModal={() => setIsOpenModal(false)}>
+          <ConfirmDelete
+            resourceName={`Booking of ${guestName}`}
+            onConfirm={() => deleteBooking(bookingId)}
+            disabled={isDeletingBooking}
+            onCloseDeleteModal={() => setIsOpenModal(false)}
+          />
+        </Modal>
+      )}
     </Table.Row>
   );
 }
