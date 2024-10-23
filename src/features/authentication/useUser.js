@@ -7,8 +7,6 @@ function useUser() {
     queryFn: getUser,
   });
 
-  console.log(user);
-
   return { user, isLoading, isAuthenticated: user?.role === 'authenticated' };
 }
 
