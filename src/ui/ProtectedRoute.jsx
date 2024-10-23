@@ -15,6 +15,9 @@ function ProtectedRoute({ children }) {
     },
     [isAuthenticated, navigate, isLoading]
   );
+
+  console.log(isAuthenticated);
+
   //render spinner if is loading
   if (isLoading) return <Spinner />;
   // if is authenticated enter
