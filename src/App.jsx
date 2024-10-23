@@ -15,6 +15,7 @@ import PageNotFound from './pages/PageNotFound';
 import AppLayout from './ui/AppLayout';
 import Booking from './pages/Booking';
 import CheckIn from './pages/CheckIn';
+import ProtectedRoute from './ui/ProtectedRoute';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -26,7 +27,11 @@ const queryClient = new QueryClient({
 
 const router = createBrowserRouter([
   {
-    element: <AppLayout />,
+    element: (
+      <ProtectedRoute>
+        <AppLayout />
+      </ProtectedRoute>
+    ),
     children: [
       {
         path: '/',
