@@ -3,15 +3,16 @@ import Button from '../../ui/Button';
 import Form from '../../ui/Form';
 import FormRow from '../../ui/FormRow';
 import Input from '../../ui/Input';
+import UserSignup from './UserSignup';
 
 // Email regex: /\S+@\S+\.\S+/
 
 function SignupForm() {
-  const { register, formState, getValues, handleSubmit } = useForm();
+  const { register, formState, getValues, handleSubmit, reset } = useForm();
   const { errors } = formState;
-
-  function submit(data) {
-    console.log(data);
+  const { signUp, isLoading } = UserSignup();
+  function submit({ fullName, email, password }) {
+    signUp({ fullName, email, password }, { onSuccess: () => reset() });
   }
   return (
     <Form onSubmit={handleSubmit(submit)}>
@@ -20,6 +21,7 @@ function SignupForm() {
         error={errors?.fullName?.message}
       >
         <Input
+          disabled={isLoading}
           type='text'
           id='fullName'
           {...register('fullName', { required: 'This field Required' })}
@@ -31,6 +33,7 @@ function SignupForm() {
         error={errors?.email?.message}
       >
         <Input
+          disabled={isLoading}
           type='email'
           id='email'
           {...register('email', {
@@ -48,6 +51,7 @@ function SignupForm() {
         error={errors?.password?.message}
       >
         <Input
+          disabled={isLoading}
           type='password'
           id='password'
           {...register('password', {
@@ -65,6 +69,7 @@ function SignupForm() {
         error={errors?.passwordConfirm?.message}
       >
         <Input
+          disabled={isLoading}
           type='password'
           id='passwordConfirm'
           {...register('passwordConfirm', {
@@ -80,10 +85,11 @@ function SignupForm() {
         <Button
           $variations='secondary'
           type='reset'
+          disabled={isLoading}
         >
           Cancel
         </Button>
-        <Button>Create new user</Button>
+        <Button disabled={isLoading}>Create new user</Button>
       </FormRow>
     </Form>
   );
