@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import Logout from '../features/authentication/Logout';
 import MenuHeader from './MenuHeader';
 import UserAvatar from '../features/authentication/UserAvatar';
 const StyledHeader = styled.header`
