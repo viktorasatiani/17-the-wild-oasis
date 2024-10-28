@@ -17,6 +17,8 @@ import Booking from './pages/Booking';
 import CheckIn from './pages/CheckIn';
 import ProtectedRoute from './ui/ProtectedRoute';
 import { DarkModeProvider } from './context/DarkModeContext';
+import { ErrorBoundary } from 'react-error-boundary';
+import ErrorFallback from './ui/ErrorFallback';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -29,11 +31,16 @@ const queryClient = new QueryClient({
 const router = createBrowserRouter([
   {
     element: (
-      <DarkModeProvider>
-        <ProtectedRoute>
-          <AppLayout />
-        </ProtectedRoute>
-      </DarkModeProvider>
+      <ErrorBoundary
+        FallbackComponent={ErrorFallback}
+        onReset={() => window.location.replace('/')}
+      >
+        <DarkModeProvider>
+          <ProtectedRoute>
+            <AppLayout />
+          </ProtectedRoute>
+        </DarkModeProvider>
+      </ErrorBoundary>
     ),
     children: [
       {
