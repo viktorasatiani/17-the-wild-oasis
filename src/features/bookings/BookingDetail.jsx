@@ -11,7 +11,7 @@ import Spinner from '../../ui/Spinner';
 import { useMoveBack } from '../../hooks/useMoveBack';
 import useBooking from './useBooking';
 import { useNavigate } from 'react-router';
-import { HiArrowUpOnSquare } from 'react-icons/hi2';
+import Empty from '../../ui/Empty';
 import useCheckout from '../check-in-out/useCheckout';
 import { useState } from 'react';
 import Modal from '../../ui/Modal';
@@ -40,6 +40,7 @@ function BookingDetail() {
     'checked-out': 'silver',
   };
   if (isLoading) return <Spinner />;
+  if (!booking) return <Empty resource='Booking' />;
 
   return (
     <>
