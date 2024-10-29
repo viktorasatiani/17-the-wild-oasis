@@ -1,12 +1,15 @@
 import styled from 'styled-components';
 import { formatCurrency } from '../../utils/helpers';
 import { useDeleteCabin } from './useDeleteCabin';
-import { HiPencil, HiSquare2Stack, HiTrash } from 'react-icons/hi2';
+import { HiOutlineSquare2Stack } from 'react-icons/hi2';
 import ConfirmDelete from '../../ui/ConfirmDelete';
 import { useCreateCabin } from './useCreateCabin';
 import Modal from '../../ui/Modal';
 import EditCabinForm from './EditCabinForm';
 import { useState } from 'react';
+import { HiOutlinePencil, HiOutlineTrash } from 'react-icons/hi';
+import { IconContext } from 'react-icons';
+import { useDarkMode } from '../../context/useDarkMode';
 
 const TableRow = styled.div`
   display: grid;
@@ -51,6 +54,7 @@ function CabinRow({ cabin }) {
   const [isOpenEditModal, setIsOpenEditModal] = useState();
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState();
   const { createCabin, isCreating } = useCreateCabin();
+  const { isDark } = useDarkMode();
   const {
     id: cabinId,
     name,
@@ -77,52 +81,58 @@ function CabinRow({ cabin }) {
   const { isPending, deletingCabin } = useDeleteCabin();
   return (
     <>
-      <TableRow role='row'>
-        <Img
-          src={image}
-          alt="Cabin's image"
-        />
-        <Cabin>{name}</Cabin>
-        <div>Fits up to {maxCapacity} guests</div>
-        <Price>{formatCurrency(regularPrice)}</Price>
-        {discount ? (
-          <Discount>{formatCurrency(discount)}</Discount>
-        ) : (
-          <span>-</span>
+      <IconContext.Provider
+        value={{
+          color: isDark ? 'var(--color-grey-100)' : 'var(--color-grey-700)',
+        }}
+      >
+        <TableRow role='row'>
+          <Img
+            src={image}
+            alt="Cabin's image"
+          />
+          <Cabin>{name}</Cabin>
+          <div>Fits up to {maxCapacity} guests</div>
+          <Price>{formatCurrency(regularPrice)}</Price>
+          {discount ? (
+            <Discount>{formatCurrency(discount)}</Discount>
+          ) : (
+            <span>-</span>
+          )}
+          <div>
+            <button
+              onClick={handleDuplicate}
+              disabled={isCreating}
+            >
+              <HiOutlineSquare2Stack />
+            </button>
+            <button onClick={() => setIsOpenEditModal((show) => !show)}>
+              <HiOutlinePencil />
+            </button>
+            <button onClick={() => setIsOpenDeleteModal((show) => !show)}>
+              <HiOutlineTrash />
+            </button>
+          </div>
+        </TableRow>
+        {isOpenEditModal && (
+          <Modal onCloseEditModal={onCloseEditModal}>
+            <EditCabinForm
+              cabinToEdit={cabin}
+              onCloseEditModal={onCloseEditModal}
+            />
+          </Modal>
         )}
-        <div>
-          <button
-            onClick={handleDuplicate}
-            disabled={isCreating}
-          >
-            <HiSquare2Stack />
-          </button>
-          <button onClick={() => setIsOpenEditModal((show) => !show)}>
-            <HiPencil />
-          </button>
-          <button onClick={() => setIsOpenDeleteModal((show) => !show)}>
-            <HiTrash />
-          </button>
-        </div>
-      </TableRow>
-      {isOpenEditModal && (
-        <Modal onCloseEditModal={onCloseEditModal}>
-          <EditCabinForm
-            cabinToEdit={cabin}
-            onCloseEditModal={onCloseEditModal}
-          />
-        </Modal>
-      )}
-      {isOpenDeleteModal && (
-        <Modal>
-          <ConfirmDelete
-            resourceName={name}
-            onConfirm={() => deletingCabin(cabinId)}
-            disabled={isPending}
-            onCloseDeleteModal={onCloseDeleteModal}
-          />
-        </Modal>
-      )}
+        {isOpenDeleteModal && (
+          <Modal>
+            <ConfirmDelete
+              resourceName={name}
+              onConfirm={() => deletingCabin(cabinId)}
+              disabled={isPending}
+              onCloseDeleteModal={onCloseDeleteModal}
+            />
+          </Modal>
+        )}
+      </IconContext.Provider>
     </>
   );
 }
