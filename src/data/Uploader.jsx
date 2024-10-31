@@ -9,13 +9,6 @@ import { cabins } from './data-cabins';
 import { guests } from './data-guests';
 import styled from 'styled-components';
 
-// const originalSettings = {
-//   minBookingLength: 3,
-//   maxBookingLength: 30,
-//   maxGuestsPerBooking: 10,
-//   breakfastPrice: 15,
-// };
-
 const StyledDiv = styled.div`
   margin-top: auto;
   background-color: e0e7ff;
