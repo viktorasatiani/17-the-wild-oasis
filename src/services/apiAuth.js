@@ -1,4 +1,4 @@
-import supabase, { supabaseUrl } from '../services/supabase';
+import supabase from '../services/supabase';
 async function login({ email, password }) {
   let { data, error } = await supabase.auth.signInWithPassword({
     email,
@@ -74,7 +74,9 @@ export async function updateUser({ password, fullName, avatar }) {
   const { data: updatedUser, error: updatedUserError } =
     await supabase.auth.updateUser({
       data: {
-        avatar: `${supabaseUrl}/storage/v1/object/public/avatars/${fileName}`,
+        avatar: `${
+          import.meta.env.VITE_SUPABASE_URL
+        }/storage/v1/object/public/avatars/${fileName}`,
       },
     });
   console.log(data);
